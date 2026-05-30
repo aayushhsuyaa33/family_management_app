@@ -1,0 +1,22 @@
+# iOS platform version
+platform :ios, '12.0'
+
+# CocoaPods environment
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_install_all_ios_pods(install_flutter_plugin_pods)
+  install_flutter_plugin_pods.call
+end
+
+target 'Runner' do
+  use_frameworks!
+  use_modular_headers!
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__)) + '/Flutter/Generated.xcconfig'
+end

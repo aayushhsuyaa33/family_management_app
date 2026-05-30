@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "1058182962921",
+    "project_id": "home-ops-10cc3",
+    "storage_bucket": "home-ops-10cc3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058182962921:android:0c0e20433e671070441a78",
+        "android_client_info": {
+          "package_name": "com.example.family_management_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1058182962921-08psp4uakh9rf63n184p21i8gjrju1v5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.family_management_app",
+            "certificate_hash": "ed63752a37b4ad32792912585acff4080856aacb"
+          }
+        },
+        {
+          "client_id": "1058182962921-kakmoicscdouu0pnqjk4bo28glkkohoq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsEnOml7ctYgRNS_L6LMY5UWWa1IfasSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1058182962921-kakmoicscdouu0pnqjk4bo28glkkohoq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1058182962921-ghtvqp9ol28fdnro6i9hmlil1sf54gkf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.familyManagementApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058182962921:android:1c9f4545c6305116441a78",
+        "android_client_info": {
+          "package_name": "com.home.family_management_home_ops"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1058182962921-kakmoicscdouu0pnqjk4bo28glkkohoq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsEnOml7ctYgRNS_L6LMY5UWWa1IfasSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1058182962921-kakmoicscdouu0pnqjk4bo28glkkohoq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1058182962921-ghtvqp9ol28fdnro6i9hmlil1sf54gkf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.familyManagementApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

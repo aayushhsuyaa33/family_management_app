@@ -1,0 +1,696 @@
+import 'dart:developer';
+import 'package:family_management_app/app/utils/custom_drawar.dart';
+import 'package:family_management_app/bloc/fetch_cubit/fetch_event_cubit.dart';
+import 'package:family_management_app/bloc/fetch_tasks/fetch_tasks_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:family_management_app/app/app%20Color/app_color.dart';
+import 'package:family_management_app/app/routes/app_routes.dart';
+import 'package:family_management_app/app/textStyle/textstyles.dart';
+import 'package:family_management_app/app/utils/custom_appbar.dart';
+import 'package:family_management_app/app/utils/shimmer.dart';
+import 'package:family_management_app/app/utils/utils.dart';
+import 'package:family_management_app/bloc/fetch%20User/fetch_user_cubit.dart';
+import 'package:family_management_app/service/secure_storage.dart';
+
+class CommandCenterScreen extends StatefulWidget {
+  const CommandCenterScreen({super.key});
+
+  @override
+  State<CommandCenterScreen> createState() => _CommandCenterScreenState();
+}
+
+class _CommandCenterScreenState extends State<CommandCenterScreen> {
+  String savedUserRole = "";
+  String savedUserName = "";
+  String savedUserImage = "";
+  String savedBoardId = "";
+  String savedUserId = "";
+  String savedUserEmail = "";
+
+  bool isLongPressedKid = false;
+  bool isLongPressedLead = false;
+  bool isDeletingKid = false;
+  bool isDeletingLead = false;
+
+  final List<String> selectedKids = [];
+  final List<String> selectedLeads = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSecureData();
+    context.read<FetchUserCubit>().fetchCommandCenterInfo();
+  }
+
+  Future<void> _loadSecureData() async {
+    savedUserRole = await AppStorage.read(key: "savedRole") ?? "";
+    savedUserName = await AppStorage.read(key: "name") ?? "";
+    savedUserImage = await AppStorage.read(key: "imagePath") ?? "";
+    savedUserEmail = await AppStorage.read(key: "email") ?? "";
+    savedBoardId = await AppStorage.read(key: "boardId") ?? "";
+    savedUserId = await AppStorage.read(key: "uid") ?? "";
+
+    log(
+      "NAME: $savedUserName, ROLE: $savedUserRole, IMAGE: $savedUserImage, EMAIL: $savedUserEmail, BoardId: $savedBoardId, Uid: $savedUserId",
+    );
+
+    setState(() {});
+  }
+
+  
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColor.background,
+      endDrawer: MyCustomDrawar(),
+      appBar: MyCustomAppBar(
+        heading: "Command Center",
+        subTitle: "Stay connected with your team",
+        // isInvite: true,
+        // onInviteClicked: _inviteUser,
+        isRightDrawer: true,
+      ),
+      body: WillPopScope(
+        onWillPop: () async {
+          if (isLongPressedKid) {
+            setState(() {
+              isLongPressedKid = false;
+              selectedKids.clear();
+            });
+            return false;
+          }
+          if (isLongPressedLead) {
+            setState(() {
+              isLongPressedLead = false;
+              selectedLeads.clear();
+            });
+            return false;
+          }
+          return true;
+        },
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(
+            vertical: 10.h,
+            horizontal: 20.w,
+          ).copyWith(right: 0, bottom: 50.h),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _sectionTitle("Chief of Operations"),
+              SizedBox(height: 7.h),
+              _buildChiefRow(),
+
+              SizedBox(height: 35.h),
+              _buildLeadSection(),
+
+              SizedBox(height: 35.h),
+              _buildKidSection(),
+            ],
+          ),
+        ),
+      ),
+    );\
+  }
+
+  Widget _sectionTitle(String title) {
+    return Text(title, style: t1White().copyWith(fontSize: 25.sp));
+  }
+
+  Widget _buildChiefRow() {
+    return BlocBuilder<FetchUserCubit, FetchUserState>(
+      builder: (context, state) {
+        if (state.fetchCommandCenterInfoStatus == FetchRequestStatus.loading) {
+          return Padding(
+            padding: EdgeInsets.only(right: 20.w, top: 5.h),
+            child: Column(
+              children: [
+                myShimmerBoxCircle(height: 95.h, width: 95.h),
+                SizedBox(height: 5.h),
+                myShimmerBoxSharp(width: 100.w, height: 20.sp),
+              ],
+            ),
+          );
+        }
+
+        final chiefUsers =
+            state.userInfo?.where((user) => user.role == "Chief").toList() ??
+            [];
+
+        if (chiefUsers.isEmpty) {
+          return Center(
+            child: Text("No Chief User Added Yet", style: hintTextStyle()),
+          );
+        }
+
+        final chief = chiefUsers.first;
+        return imageScrollRow(
+          isSelfUser: savedUserId == chief.uid,
+          itemCount: chiefUsers.length,
+          userName: chief.name,
+          imagePath: chief.imagePath,
+          onPressed: savedUserRole == "Chief"
+              ? () => Navigator.pushNamed(
+                  context,
+                  AppRoutes.profileScreen,
+                  arguments: {
+                    'uid': savedUserId,
+                    'email': savedUserEmail,
+                    'isChild': false,
+                  },
+                )
+              : () {},
+        );
+      },
+    );
+  }
+
+  Widget _buildLeadSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        iconRow(
+          text: "Unit Lead (Support)",
+          isAddButton: selectedLeads.isEmpty,
+          onAddIconPressed: () {
+            if (selectedLeads.isEmpty) {
+              Navigator.pushNamed(context, AppRoutes.addMemberScreen);
+            }
+          },
+          onEditPressed: () {
+            if (selectedLeads.isEmpty && !isLongPressedKid) {
+              setState(() {
+                isLongPressedLead = true;
+              });
+            } else if (selectedLeads.isNotEmpty) {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.addMemberScreen,
+                arguments: {'uid': selectedLeads.first},
+              );
+            }
+          },
+          onInvitePressed: _inviteUser,
+          onDeleteIconPressed: () async {
+            if (selectedLeads.isEmpty && !isLongPressedKid) {
+              setState(() => isLongPressedLead = true);
+              return;
+            }
+
+            setState(() {
+              isDeletingLead = true;
+              isLongPressedLead = false;
+            });
+
+            await context.read<FetchUserCubit>().deleteUserLeadFromFirestore(
+              selectedLeads,
+            );
+            context.read<FetchUserCubit>().fetchCommandCenterInfo();
+            context.read<FetchEventCubit>().fetchRecentEvent();
+            context.read<FetchTasksCubit>().getDateAndRoleForCalander();
+
+            if (selectedLeads.isNotEmpty) {
+              mySnackBar(
+                context,
+                title:
+                    "${selectedLeads.length} Lead User${selectedLeads.length > 1 ? 's' : ''} deleted successfully",
+              );
+            }
+
+            setState(() {
+              selectedLeads.clear();
+              isDeletingLead = false;
+            });
+          },
+        ),
+        SizedBox(height: 10.h),
+        _buildLeadUsersRow(),
+      ],
+    );
+  }
+
+  Widget _buildLeadUsersRow() {
+    return BlocBuilder<FetchUserCubit, FetchUserState>(
+      builder: (context, state) {
+        final leadUsers =
+            state.userInfo?.where((u) => u.role == "Lead").toList() ?? [];
+
+        if (state.fetchCommandCenterInfoStatus == FetchRequestStatus.loading) {
+          return _buildShimmerRow(leadUsers.length);
+        }
+
+        if (leadUsers.isEmpty) {
+          return Center(
+            child: Container(
+              width: double.infinity,
+              alignment: Alignment.center,
+              height: 110.h,
+              child: Text("No Lead User Added Yet", style: hintTextStyle()),
+            ),
+          );
+        }
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: leadUsers.map((user) {
+              final bool isAdded =
+                  user.joinStatus == "added" && !isLongPressedLead;
+              final bool isDownloaded =
+                  user.joinStatus == "accepted" && !isLongPressedLead;
+              return AnimatedOpacity(
+                opacity: isDeletingLead && selectedLeads.contains(user.uid)
+                    ? 0
+                    : 1,
+                duration: const Duration(milliseconds: 800),
+                child: imageScrollRow(
+                  isSelfUser: isDownloaded || savedUserId == user.uid,
+                  isSelected: selectedLeads.contains(user.uid),
+                  isLongPressed: isLongPressedLead,
+                  isAdded: isAdded,
+
+                  onLongPressed: () {
+                    if (!isLongPressedKid) {
+                      setState(() {
+                        isLongPressedLead = true;
+                        selectedLeads.add(user.uid);
+                      });
+                    }
+                  },
+                  onPressed: () {
+                    if (savedUserRole == "Chief" || savedUserId == user.uid) {
+                      if (isLongPressedLead) {
+                        setState(() {
+                          selectedLeads.contains(user.uid)
+                              ? selectedLeads.remove(user.uid)
+                              : selectedLeads.add(user.uid);
+                        });
+                      } else {
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.profileScreen,
+                          arguments: {
+                            'uid': user.uid,
+                            'email': user.name,
+                            'isChild': false,
+                          },
+                        );
+                      }
+                    }
+                  },
+                  itemCount: leadUsers.length,
+                  imagePath: user.imagePath,
+                  userName: user.name,
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildKidSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        iconRow(
+          text: "Stakeholders (Kids)",
+          isAddButton: selectedKids.isEmpty,
+          onAddIconPressed: () {
+            if (selectedKids.isEmpty && selectedLeads.isEmpty) {
+              Navigator.pushNamed(context, AppRoutes.addChildFlow);
+            }
+          },
+          onEditPressed: () {
+            if (selectedKids.isEmpty && !isLongPressedLead) {
+              setState(() {
+                isLongPressedKid = true;
+              });
+            } else if (selectedKids.isNotEmpty) {
+              Navigator.pushNamed(
+                context,
+                AppRoutes.addChildFlow,
+                arguments: {'uid': selectedKids[0]},
+              );
+            }
+          },
+          onInvitePressed: () {},
+          onDeleteIconPressed: () async {
+            if (selectedKids.isEmpty && !isLongPressedLead) {
+              setState(() => isLongPressedKid = true);
+              return;
+            }
+
+            setState(() {
+              isDeletingKid = true;
+              isLongPressedKid = false;
+            });
+
+            await context.read<FetchUserCubit>().deleteUserFromFirestore(
+              selectedKids,
+            );
+            context.read<FetchUserCubit>().fetchCommandCenterInfo();
+            context.read<FetchEventCubit>().fetchRecentEvent();
+            context.read<FetchTasksCubit>().getDateAndRoleForCalander();
+
+            if (selectedKids.isNotEmpty) {
+              mySnackBar(
+                context,
+                title:
+                    "${selectedKids.length} Stakeholder${selectedKids.length > 1 ? 's' : ''} deleted successfully",
+              );
+            }
+            setState(() {
+              selectedKids.clear();
+              isDeletingKid = false;
+            });
+          },
+        ),
+        SizedBox(height: 10.h),
+        _buildKidUsersRow(),
+      ],
+    );
+  }
+
+  Widget _buildKidUsersRow() {
+    return BlocBuilder<FetchUserCubit, FetchUserState>(
+      builder: (context, state) {
+        final kidUsers =
+            state.userInfo?.where((u) => u.role == "Stakeholder").toList() ??
+            [];
+
+        if (state.fetchCommandCenterInfoStatus == FetchRequestStatus.loading) {
+          return _buildShimmerRow(kidUsers.length);
+        }
+
+        if (kidUsers.isEmpty) {
+          return Center(
+            child: Container(
+              width: double.infinity,
+              alignment: Alignment.center,
+              height: 110.h,
+              child: Text("No Stakeholder Added Yet", style: hintTextStyle()),
+            ),
+          );
+        }
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: kidUsers.map((user) {
+              return AnimatedOpacity(
+                opacity: isDeletingKid && selectedKids.contains(user.uid)
+                    ? 0
+                    : 1,
+                duration: const Duration(milliseconds: 800),
+                child: imageScrollRow(
+                  isSelfUser: savedUserId == user.uid,
+                  isSelected: selectedKids.contains(user.uid),
+                  isLongPressed: isLongPressedKid,
+
+                  onLongPressed: () {
+                    if (!isLongPressedLead) {
+                      setState(() {
+                        isLongPressedKid = true;
+                        selectedKids.add(user.uid);
+                      });
+                    }
+                  },
+                  onPressed: () {
+                    if (savedUserRole == "Chief" || savedUserId == user.uid) {
+                      if (isLongPressedKid) {
+                        setState(() {
+                          selectedKids.contains(user.uid)
+                              ? selectedKids.remove(user.uid)
+                              : selectedKids.add(user.uid);
+                        });
+                      } else {
+                        if (!isLongPressedLead) {
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.profileScreen,
+                            arguments: {
+                              'uid': user.uid,
+                              'email': user.name,
+                              'isChild': true,
+                            },
+                          );
+                        }
+                      }
+                    }
+                  },
+                  itemCount: kidUsers.length,
+                  imagePath: user.imagePath,
+                  userName: user.name,
+                  isKid: true,
+                  kidAge: user.email,
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
+  }
+
+  return MyCommandCenterProfileHolder(
+                    name: chief.name,
+                    imagePath: chief.imagePath,
+                    role: chief.role,
+                    isLongPressed: isLongPressedChief,
+                    isSelected: selectedChiefs.contains(chief.uid),
+                    onPressed: () {
+                      if (savedUserRole == "Chief" ||
+                          savedUserRole == "Co-chief") {
+                        if (isLongPressedChief) {
+                          setState(() {
+                            selectedChiefs.contains(chief.uid)
+                                ? selectedChiefs.remove(chief.uid)
+                                : selectedChiefs.add(chief.uid);
+                          });
+                        } else {
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.profileScreen,
+                            arguments: {
+                              'uid': chief.uid,
+                              'email': chief.email,
+                              'isChild': false,
+                            },
+                          );
+                        }
+                      }
+                    },
+                    onLongPressed: () {
+                      setState(() {
+                        isLongPressedChief = true;
+                        selectedChiefs.add(chief.uid);
+                      });
+                    },
+                    // isSelfUser: savedUserId == chief.uid,
+                  );
+
+  Widget _buildShimmerRow(int count) {
+    return Padding(
+      padding: EdgeInsets.only(right: 20.w, top: 5.h),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: List.generate(count > 0 ? count : 4, (_) {
+            return Column(
+              children: [
+                myShimmerBoxCircle(height: 95.h, width: 95.h),
+                SizedBox(height: 5.h),
+                myShimmerBoxSharp(width: 100.w, height: 20.sp),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+
+  Widget imageScrollRow({
+    required int itemCount,
+    String? imagePath,
+    String? userName,
+    required VoidCallback onPressed,
+    VoidCallback? onLongPressed,
+    bool isSelfUser = false,
+    bool isLongPressed = false,
+    bool isSelected = false,
+    bool isKid = false,
+    bool isAdded = false,
+
+    String? kidAge,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(right: 20.w, top: 5.h),
+      child: Column(
+        children: [
+          GestureDetector(
+            onLongPress: savedUserRole == "Chief" ? onLongPressed : null,
+
+            child: MyProfileHolder(
+              onPressed: onPressed,
+              imagePath: imagePath ?? "",
+              name: userName ?? "",
+              height: 90,
+              width: 90,
+              fontSize: 50,
+              isSelfUSer: isSelfUser,
+              isLongPressed: isLongPressed,
+              isSelected: isSelected,
+              isAddedManually: isAdded,
+            ),
+          ),
+          SizedBox(height: 5.h),
+          Text(
+            userName ?? "",
+            style: hintTextStyle().copyWith(
+              fontSize: 20.sp,
+              color: AppColor.secondary,
+            ),
+          ),
+          isKid
+              ? Text(
+                  kidAge ?? "",
+                  style: hintTextStyle().copyWith(color: Colors.white70),
+                )
+              : SizedBox(),
+        ],
+      ),
+    );
+  }
+
+
+
+
+class MyProfileHolder extends StatelessWidget {
+  final String? imagePath;
+  final String? name;
+  final int width;
+  final int height;
+  final int fontSize;
+  final bool isSelfUSer;
+  final bool isLongPressed;
+  final bool isSelected;
+  final VoidCallback? onPressed;
+  final bool isAddedManually;
+
+  const MyProfileHolder({
+    super.key,
+    this.imagePath,
+    this.width = 35,
+    this.height = 35,
+    this.name,
+    this.fontSize = 20,
+    this.isSelfUSer = false,
+    this.isLongPressed = false,
+    this.isSelected = false,
+    this.onPressed,
+    this.isAddedManually = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final hasImage = imagePath != null && imagePath!.isNotEmpty;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        GestureDetector(
+          onTap: () {
+            onPressed?.call();
+          },
+          child: Container(
+            width: width.w,
+            height: height.h,
+            decoration: BoxDecoration(
+              border: Border.all(width: 1, color: AppColor.secondary),
+              image: hasImage
+                  ? DecorationImage(
+                      image: NetworkImage(imagePath!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+              color: hasImage ? null : const Color.fromARGB(255, 33, 78, 155),
+              shape: BoxShape.circle,
+            ),
+            child: !hasImage
+                ? Center(
+                    child: Text(
+                      (name != null && name!.isNotEmpty)
+                          ? name![0].toUpperCase()
+                          : '?',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: fontSize.sp,
+                      ),
+                    ),
+                  )
+                : null,
+          ),
+        ),
+
+        // ✅ Green tick only if self user
+        if (isSelfUSer)
+          Positioned(
+            right: 5, // adjust if you want outside overlap
+            bottom: -2,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color.fromARGB(255, 44, 114, 45),
+                border: BoxBorder.all(color: AppColor.border),
+              ),
+              padding: EdgeInsets.all(4.r),
+              child: const Icon(Icons.check, color: AppColor.border, size: 14),
+            ),
+          ),
+
+        if (isAddedManually)
+          Positioned(
+            right: 0, // adjust if you want outside overlap
+            bottom: -2,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.grey.shade600,
+                border: BoxBorder.all(color: AppColor.border),
+              ),
+              padding: EdgeInsets.all(4.r),
+              child: const Icon(Icons.check, color: Colors.white, size: 14),
+            ),
+          ),
+        if (isLongPressed)
+          Positioned(
+            right: 3,
+            bottom: 2,
+            child: GestureDetector(
+              onTap: () {
+                onPressed?.call();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColor.background,
+                  shape: BoxShape.circle,
+                ),
+
+                child: Icon(
+                  isSelected ? Icons.check_circle : Icons.circle_outlined,
+                  color: isSelected ? AppColor.secondary : Colors.grey,
+                  size: 25.sp,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
