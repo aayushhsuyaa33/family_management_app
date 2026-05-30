@@ -274,7 +274,6 @@ class _CommandCenterScreenState extends State<CommandCenterScreen> {
                           chief.role != "Chief",
                       onPressed: () {
                         if (savedUserRole == "Chief" ||
-                            savedUserRole == "Co-chief" ||
                             savedUserId == chief.uid) {
                           if (isLongPressedChief) {
                             setState(() {
@@ -916,11 +915,11 @@ class MyCommandCenterProfileHolder extends StatelessWidget {
                   border: Border.all(color: Colors.white, width: 1.5),
                 ),
                 padding: EdgeInsets.all(4),
-                // child: Icon(
-                //   FontAwesomeIcons.crown,
-                //   color: Colors.white,
-                //   size: 14,
-                // ),
+                child: FaIcon(
+                  FontAwesomeIcons.crown,
+                  color: Colors.white,
+                  size: 14,
+                ),
               ),
             ),
 
@@ -938,13 +937,13 @@ class MyCommandCenterProfileHolder extends StatelessWidget {
                   border: Border.all(color: Colors.white, width: 1.5),
                 ),
                 padding: EdgeInsets.all(4),
-                // child: Icon(
-                //   status == "accepted"
-                //       ? FontAwesomeIcons.shieldHalved
-                //       : Icons.hourglass_top,
-                //   color: Colors.white,
-                //   size: 14.sp,
-                // ),
+                child: FaIcon(
+                  status == "accepted"
+                      ? FontAwesomeIcons.shieldHalved
+                      : FontAwesomeIcons.hourglass,
+                  color: Colors.white,
+                  size: 14.sp,
+                ),
               ),
             ),
 

@@ -90,20 +90,33 @@ class MyCustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: subTitle == null
-                  ? MainAxisAlignment.center
-                  : MainAxisAlignment.start,
-              children: [
-                Text(heading, style: t1heading().copyWith(fontSize: 30.sp)),
-                subTitle != null
-                    ? Text(subTitle!, style: t3White())
-                    : SizedBox(),
-              ],
-            ),
-            Spacer(),
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: subTitle == null
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.start,
+                children: [
+                  Text(
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
 
+                    heading,
+                    style: t1heading().copyWith(fontSize: 30.sp),
+                  ),
+                  subTitle != null
+                      ? Text(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          subTitle!,
+                          style: t3White(),
+                        )
+                      : SizedBox(),
+                ],
+              ),
+            ),
+
+            isLastRow ? Spacer() : SizedBox(),
             isLastRow
                 ? GestureDetector(
                     onTap: onSkipClicked,
