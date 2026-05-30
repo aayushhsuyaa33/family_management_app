@@ -75,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen>
       return;
     }
   }
-
+// Aaded comenet 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
