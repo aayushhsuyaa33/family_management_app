@@ -6,6 +6,7 @@ import 'package:family_management_app/service/notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Future<void> main() async {
@@ -13,6 +14,13 @@ Future<void> main() async {
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   await _initServices();
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.amber,
+      statusBarBrightness: Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
+    ),
+  );
   runApp(MultiBlocWidget(child: MyApp()));
 }
 
@@ -30,15 +38,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: Size(390, 844),
-      splitScreenMode: true,
-      minTextAdapt: true,
-      ensureScreenSize: true,
+      // splitScreenMode: true,
+      // minTextAdapt: true,
+      // ensureScreenSize: true,
       builder: (context, child) {
         return MaterialApp(
           theme: ThemeData(
-            iconTheme: IconThemeData(size: 25.sp, color: AppColor.secondary),
-            brightness: Brightness.light,
-            scaffoldBackgroundColor: AppColor.background,
+            // iconTheme: IconThemeData(size: 25.sp, color: AppColor.secondary),
+            // brightness: Brightness.light,
+            // scaffoldBackgroundColor: AppColor.background,
           ),
           debugShowCheckedModeBanner: false,
           onGenerateRoute: AppRouter().generateRoutes,

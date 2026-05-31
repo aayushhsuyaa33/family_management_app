@@ -23,7 +23,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> login({required String email, required String password}) async {
-    final String? freshFcmToken = await FirebaseMessaging.instance.getToken();
+    // final String? freshFcmToken = await FirebaseMessaging.instance.getToken();
     emit(
       state.copyWith(
         status: LoginStatus.logging,
@@ -101,10 +101,10 @@ class LoginCubit extends Cubit<LoginState> {
         ),
       );
 
-      await firestore.collection('users').doc(userUid).update({
-        "wasLogin": true,
-        "fcmToken": freshFcmToken,
-      });
+      // await firestore.collection('users').doc(userUid).update({
+      //   "wasLogin": true,
+      //   "fcmToken": freshFcmToken,
+      // });
     } on FirebaseAuthException catch (exe) {
       final errorMessage = FirebaseAuthErrorHandler.getMessage(exe);
 

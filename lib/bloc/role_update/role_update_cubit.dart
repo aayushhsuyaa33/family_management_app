@@ -64,14 +64,14 @@ class RoleUpdateCubit extends Cubit<RoleUpdateState> {
 
     try {
       String boardCode = generateBoardCode(length: 5);
-      final fcmToken = await FirebaseMessaging.instance.getToken();
+      // final fcmToken = await FirebaseMessaging.instance.getToken();
       await firestore.collection('users').doc(uid).update({
         "role": "Chief",
         'boardId': boardCode,
         'title': title,
         'description': description ?? "",
         'joinStatus': 'Started',
-        "fcmToken": fcmToken ?? "",
+        // "fcmToken": fcmToken ?? "",
       });
 
       final doc = await firestore.collection("users").doc(uid).get();
@@ -92,7 +92,7 @@ class RoleUpdateCubit extends Cubit<RoleUpdateState> {
         'title': title,
         'description': description ?? "",
         'joinStatus': 'Started',
-        "fcmToken": fcmToken ?? "",
+        // "fcmToken": fcmToken ?? "",
       });
 
       if (user != null && !user.emailVerified && checkingIsGoogle == false) {
@@ -140,7 +140,7 @@ class RoleUpdateCubit extends Cubit<RoleUpdateState> {
     emit(state.copyWith(updatingMemberStatus: RoleUpdatingStatus.loading));
 
     try {
-      final fcmToken = await FirebaseMessaging.instance.getToken();
+      // final fcmToken = await FirebaseMessaging.instance.getToken();
       final uid = firebaseAuth.currentUser?.uid;
       if (uid == null) throw Exception("User not logged in");
 
@@ -192,7 +192,7 @@ class RoleUpdateCubit extends Cubit<RoleUpdateState> {
         "joinStatus": "pending",
         'chiefId': chiefUid,
         'chiefEmail': chiefEmail ?? "",
-        "fcmToken": fcmToken ?? "",
+        // "fcmToken": fcmToken ?? "",
       });
 
       // 4. Save join request under boardId
@@ -213,7 +213,7 @@ class RoleUpdateCubit extends Cubit<RoleUpdateState> {
             'role': null,
             'chiefId': chiefUid,
             'chiefEmail': chiefEmail ?? "",
-            "fcmToken": fcmToken ?? "",
+            // "fcmToken": fcmToken ?? "",
           });
 
       emit(

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:family_management_app/service/secure_storage.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -20,12 +21,40 @@ class NotificationService {
       sound: true,
     );
 
-    // ✅ Get FCM Token
-    String? fcmtoken = await _messaging.getToken();
+    String? fcmtoken;
+
+    if (Platform.isIOS) {
+      // iOS: wait for APNs first (required)
+      String? apnsToken = await _messaging.getAPNSToken();
+
+      int attempts = 0;
+      while (apnsToken == null && attempts < 8) {
+        await Future.delayed(const Duration(milliseconds: 800));
+        apnsToken = await _messaging.getAPNSToken();
+        attempts++;
+      }
+
+      if (apnsToken == null) {
+        log("⚠️ iOS APNS token not ready yet. Skipping FCM token for now.");
+        return;
+      }
+
+      fcmtoken = await _messaging.getToken();
+    } else {
+      // Android: direct safe call
+      fcmtoken = await _messaging.getToken();
+    }
+
     if (fcmtoken != null) {
       await AppStorage.save(key: "fcmToken", data: fcmtoken);
       log("FCM Token: $fcmtoken");
     }
+    // ✅ Get FCM Token
+    // String? fcmtoken = await _messaging.getToken();
+    // if (fcmtoken != null) {
+    //   await AppStorage.save(key: "fcmToken", data: fcmtoken);
+    //   log("FCM Token: $fcmtoken");
+    // }
 
     // ✅ Foreground listener
     FirebaseMessaging.onMessage.listen((RemoteMessage msg) {
