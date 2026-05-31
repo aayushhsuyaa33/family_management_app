@@ -46,12 +46,12 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _handleSplashNavigation(context) async {
-    // await NotificationService.requestPermission();
     SharedPreferences pref = await SharedPreferences.getInstance();
     bool isFirstInstall = pref.getBool("isFirstInstall") ?? true;
     final savedUid = await AppStorage.read(key: 'uid');
 
-    // await Future.delayed(Duration(milliseconds: 1200));
+    await Future.delayed(Duration(seconds: 2));
+    Navigator.pushNamed(context, AppRoutes.onBoardingScreen);
     // if (isFirstInstall) {
     //   Navigator.pushNamedAndRemoveUntil(
     //     context,
@@ -79,44 +79,31 @@ class _SplashScreenState extends State<SplashScreen>
   // Aaded comenet
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return Scaffold(
-      // backgroundColor: AppColor.ba,
-      body: AnimatedBuilder(
-        animation: tweenController,
-        builder: (context, child) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ScaleTransition(
+      backgroundColor: AppColor.background,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AnimatedBuilder(
+              animation: tweenController,
+              builder: (context, child) {
+                return ScaleTransition(
                   scale: animationController,
-                  child: Container(
-                    width: 300.w,
-                    height: 300.h,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20.r),
-                      image: DecorationImage(
-                        image: AssetImage(AppImages.logo),
-                        fit: BoxFit.cover,
-                      ),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: size.height * 0.4,
+                      minWidth: size.width * 0.8,
                     ),
+                    child: Image.asset(AppImages.logo),
                   ),
-                ),
-
-                Text(
-                  'ALTOS HQ',
-                  style: t1White().copyWith(
-                    fontSize: 35.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.secondary,
-                  ),
-                ),
-
-                // SizedBox(height: 15.h),
-              ],
+                );
+              },
             ),
-          );
-        },
+            Text('ALTOS HQ', style: t1heading().copyWith(fontSize: 30.sp)),
+          ],
+        ),
       ),
     );
   }

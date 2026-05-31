@@ -748,11 +748,13 @@ void myAlertBox(
 }) async {
   return showDialog(
     barrierColor: AppColor.blackColor.withAlpha(100),
+
     context: context,
 
     barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
+        backgroundColor: Colors.white,
         contentPadding: EdgeInsets.only(
           bottom: 10.h,
           top: 15.h,
@@ -813,6 +815,7 @@ void myAlertBoxYesNo(
     barrierDismissible: true,
     builder: (BuildContext context) {
       return AlertDialog(
+        backgroundColor: Colors.white,
         contentPadding: EdgeInsets.only(
           bottom: 10.h,
           top: 15.h,
@@ -1937,16 +1940,14 @@ class BoardCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 20.w),
+      padding: const EdgeInsets.all(15),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          width: double.infinity,
-
-          // padding: EdgeInsets.all(12.w),
+          height: MediaQuery.of(context).size.height * 0.35,
           decoration: BoxDecoration(
             color: AppColor.dropDownColor,
-            borderRadius: BorderRadius.circular(15.r),
+            borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
                 color: Colors.white12,
@@ -1958,7 +1959,7 @@ class BoardCard extends StatelessWidget {
             border: Border.all(color: AppColor.secondary, width: 1),
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 15.w),
+            padding: EdgeInsets.all(12),
             child: Column(
               children: [
                 Text(
@@ -2322,6 +2323,7 @@ Future<bool> showYesNoDialogCal(
   return await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
+          backgroundColor: Colors.white,
           contentPadding: EdgeInsets.only(
             bottom: 10.h,
             top: 15.h,

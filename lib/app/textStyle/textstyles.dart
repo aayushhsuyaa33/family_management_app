@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 TextStyle t1heading() {
   return TextStyle(
-    fontSize: 40.sp,
+    fontSize: 35.sp,
     color: AppColor.secondary,
     fontFamily: "Font1",
     fontWeight: FontWeight.bold,

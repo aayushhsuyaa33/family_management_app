@@ -3,7 +3,6 @@ import 'package:family_management_app/app/images/app_images.dart';
 import 'package:family_management_app/app/routes/app_routes.dart';
 import 'package:family_management_app/app/textStyle/textstyles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SplashScreen1 extends StatefulWidget {
   const SplashScreen1({super.key});
@@ -38,38 +37,42 @@ class _SplashScreen1State extends State<SplashScreen1>
   }
 
   Future<void> checkFlowAndNavigate(context) async {
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 3), () {
       Navigator.pushReplacementNamed(context, AppRoutes.onBoardingScreen);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return Scaffold(
       backgroundColor: AppColor.background,
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 25.h),
-        child: Center(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("HOME OPS", style: t1heading()),
-              SizedBox(height: 30.h),
-
-              SizedBox(width: 250.w, child: Image.asset(AppImages.logo)),
-              SizedBox(height: 30.h),
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: size.height * 0.4,
+                  maxWidth: size.width * 0.8,
+                ),
+                child: Image.asset(AppImages.logo),
+              ),
               Text(
                 "RUN THE COMMAND CENTER FOR YOUR HOME",
                 textAlign: TextAlign.center,
                 style: t1().copyWith(color: AppColor.secondary),
               ),
-              SizedBox(height: 30.h),
+              const SizedBox(height: 25),
               AnimatedBuilder(
                 animation: _animation,
                 builder: (context, child) {
                   return Container(
                     width: _animation.value,
-                    height: 4.h,
+                    height: 4,
                     color: AppColor.secondary,
                   );
                 },

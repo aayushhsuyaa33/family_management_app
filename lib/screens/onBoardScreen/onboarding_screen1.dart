@@ -19,102 +19,91 @@ class _OnboardingScreen1State extends State<OnboardingScreen1> {
     return Scaffold(
       backgroundColor: AppColor.background,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 50.h),
+        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 30.h),
-              Flexible(
-                child: Text(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
                   "Run your home like a boardroom",
-                  style: t1heading(),
+                  style: t1heading().copyWith(height: 1.1),
                   textAlign: TextAlign.center,
                   // softWrap: true,
                 ),
-              ),
-              SizedBox(height: 10.h),
-              Flexible(
-                child: Text(
+                SizedBox(height: 20),
+
+                Text(
                   "Organize tasks, coordinate schedules,and manage your family operations with executive-level efficiency",
-                  style: t2White(),
+                  style: hintTextStyle().copyWith(fontSize: 16.sp),
                   textAlign: TextAlign.center,
                   softWrap: true,
                 ),
-              ),
-              Spacer(),
-
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7.r),
-                  border: Border.all(width: 1, color: AppColor.secondary),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    vertical: 20.h,
-                    horizontal: 20.w,
+                SizedBox(height: 30),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(7),
+                    border: Border.all(width: 1, color: AppColor.secondary),
                   ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.calendar_month,
-                            color: AppColor.secondary,
-                            size: 35.r,
-                          ),
-                          SizedBox(width: 5.w),
-                          Text(
-                            "Today's Agenda",
-                            style: t1().copyWith(color: AppColor.secondary),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 15.h),
-                      timeDisplayRow(
-                        time: "9:00 AM - School pickup",
-                        isChecked: isChecked[0],
-                        onPressed: (newValue) {
-                          setState(() {
-                            isChecked[0] = newValue!;
-                          });
-                        },
-                      ),
-                      timeDisplayRow(
-                        time: "2:00 PM- Grocery shopping",
-                        isChecked: isChecked[1],
-                        onPressed: (newValue) {
-                          setState(() {
-                            isChecked[1] = newValue!;
-                          });
-                        },
-                      ),
-                      timeDisplayRow(
-                        time: "6:00 PM - Family dinner",
-                        isChecked: isChecked[2],
-                        onPressed: (newValue) {
-                          setState(() {
-                            isChecked[2] = newValue!;
-                          });
-                        },
-                      ),
-                    ],
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_month,
+                              color: AppColor.secondary,
+                              size: 30,
+                            ),
+                            SizedBox(width: 7),
+                            Text(
+                              "Today's Agenda",
+                              style: t1().copyWith(color: AppColor.secondary),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 15.h),
+                        timeDisplayRow(
+                          time: "9:00 AM - School pickup",
+                          isChecked: isChecked[0],
+                          onPressed: (newValue) {
+                            setState(() {
+                              isChecked[0] = newValue!;
+                            });
+                          },
+                        ),
+                        timeDisplayRow(
+                          time: "2:00 PM- Grocery shopping",
+                          isChecked: isChecked[1],
+                          onPressed: (newValue) {
+                            setState(() {
+                              isChecked[1] = newValue!;
+                            });
+                          },
+                        ),
+                        timeDisplayRow(
+                          time: "6:00 PM - Family dinner",
+                          isChecked: isChecked[2],
+                          onPressed: (newValue) {
+                            setState(() {
+                              isChecked[2] = newValue!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-
-              Spacer(),
-              SizedBox(height: 30.h),
-              Padding(
-                padding: EdgeInsets.only(bottom: 50.h),
-                child: MyButtton(
+                SizedBox(height: 35),
+                MyButtton(
                   onPressed: () {
                     Navigator.pushNamed(context, AppRoutes.onBoardingScreen2);
                   },
                   text: "Next",
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -124,7 +113,6 @@ class _OnboardingScreen1State extends State<OnboardingScreen1> {
   Widget timeDisplayRow({
     bool isChecked = false,
     String time = "9:00 AM - School pickup",
-
     required ValueChanged<bool?> onPressed,
   }) {
     return Row(
@@ -134,9 +122,9 @@ class _OnboardingScreen1State extends State<OnboardingScreen1> {
           color: AppColor.secondary,
           size: 18.sp,
         ),
-        SizedBox(width: 7.w),
-        Text(time, style: t3White()),
-        Spacer(),
+        SizedBox(width: 7),
+        Expanded(child: Text(time, maxLines: 1, style: t3White())),
+
         Checkbox(
           activeColor: AppColor.success,
           value: isChecked,

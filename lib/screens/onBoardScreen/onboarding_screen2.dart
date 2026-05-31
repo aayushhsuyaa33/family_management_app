@@ -22,56 +22,52 @@ class _OnboardingScreen2State extends State<OnboardingScreen2> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
     return Scaffold(
       backgroundColor: AppColor.background,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 50.h),
+        padding: EdgeInsets.symmetric(horizontal: 25),
         child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 30.h),
-              Text(
-                "Less juggling. More control.",
-                style: t1heading(),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 10.h),
-              Flexible(
-                child: Text(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Less juggling. More control.",
+                  style: t1heading().copyWith(height: 1.1),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+
+                Text(
                   "Transform chaos into order. Master the art of family managemnet with tools desgined for the modern parent executive.",
-                  style: t2White(),
+                  style: hintTextStyle().copyWith(fontSize: 16.sp),
                   textAlign: TextAlign.center,
                   softWrap: true,
                 ),
-              ),
-              Spacer(),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      myIconBox((Icons.calendar_today_outlined)),
-                      SizedBox(width: 20.w),
-                      myIconBox(Icons.card_travel_outlined),
-                    ],
-                  ),
-                  SizedBox(height: 20.h),
-                  myIconBox(Icons.child_care),
-                ],
-              ),
+                SizedBox(height: size.height * 0.07),
 
-              Spacer(),
-              Padding(
-                padding: EdgeInsets.only(bottom: 50.h),
-                child: MyButtton(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    myIconBox((Icons.calendar_today_outlined)),
+                    SizedBox(width: 20),
+                    myIconBox(Icons.card_travel_outlined),
+                  ],
+                ),
+                SizedBox(height: 20),
+                myIconBox(Icons.child_care),
+                SizedBox(height: size.height * 0.07),
+
+                MyButtton(
                   onPressed: () {
                     finishOnBoarding(context);
                   },
                   text: "Start Your Board",
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -79,6 +75,10 @@ class _OnboardingScreen2State extends State<OnboardingScreen2> {
   }
 
   Widget myIconBox(IconData icon) {
-    return Icon(icon, color: AppColor.secondary, size: 70.w);
+    return Icon(
+      icon,
+      color: AppColor.secondary,
+      size: MediaQuery.sizeOf(context).height * 0.07,
+    );
   }
 }

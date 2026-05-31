@@ -36,93 +36,100 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios),
+          color: AppColor.secondary,
+        ),
+      ),
       backgroundColor: AppColor.background,
       body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 50),
-            child: BlocListener<LoginCubit, LoginState>(
-              listener: (context, state) {
-                if (state.status == LoginStatus.forgetting) {
-                  setState(() {
-                    isLoading = true;
-                  });
-                } else if (state.status == LoginStatus.forgetSucessful) {
-                  setState(() {
-                    isLoading = false;
-                    isSignedUp = true;
-                  });
-                  myAlertBox(context, subtittle: state.errorMsg!);
-                } else if (state.status == LoginStatus.forgetFailure) {
-                  setState(() {
-                    isLoading = false;
-                  });
-                  myAlertBox(context, subtittle: state.errorMsg!);
-                }
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Forgot Password", style: t1heading()),
-                  Text(
-                    "Enter your email to reset your password",
-                    style: t3White(),
-                  ),
-                  SizedBox(height: 30.h),
-                  MyTextField(
-                    userController: emailController,
-                    hint: "Email",
-                    frontIcon: Icons.email_outlined,
-                    errorMsg: emailError,
-                    onChangedValue: _validateEmail,
-                    isHide: false,
-                    onPasswordIconClicked: () {},
-                  ),
-                  SizedBox(height: 10.h),
-                  MyButtton(
-                    text: "Reset Password",
-                    isLoading: isLoading,
+        child: BlocListener<LoginCubit, LoginState>(
+          listener: (context, state) {
+            if (state.status == LoginStatus.forgetting) {
+              setState(() {
+                isLoading = true;
+              });
+            } else if (state.status == LoginStatus.forgetSucessful) {
+              setState(() {
+                isLoading = false;
+                isSignedUp = true;
+              });
+              myAlertBox(context, subtittle: state.errorMsg!);
+            } else if (state.status == LoginStatus.forgetFailure) {
+              setState(() {
+                isLoading = false;
+              });
+              myAlertBox(context, subtittle: state.errorMsg!);
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Forgot Password", style: t1heading()),
+                Text(
+                  "Enter your email to reset your password",
+                  style: hintTextStyle().copyWith(fontSize: 16.sp),
+                ),
+                SizedBox(height: 30.h),
+                MyTextField(
+                  userController: emailController,
+                  hint: "Email",
+                  frontIcon: Icons.email_outlined,
+                  errorMsg: emailError,
+                  onChangedValue: _validateEmail,
+                  isHide: false,
+                  onPasswordIconClicked: () {},
+                ),
+                SizedBox(height: 10),
+                MyButtton(
+                  text: "Reset Password",
+                  isLoading: isLoading,
 
-                    onPressed: () {
-                      _validateEmail(emailController.text.trim());
+                  onPressed: () {
+                    _validateEmail(emailController.text.trim());
 
-                      if (emailError == null) {
-                        context.read<LoginCubit>().sendPasswordResetEmail(
-                          emailController.text.trim(),
-                        );
-                      }
-                    },
-                  ),
-                  SizedBox(height: 30.h),
-
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushReplacementNamed(
-                        context,
-                        AppRoutes.loginScreen,
+                    if (emailError == null) {
+                      context.read<LoginCubit>().sendPasswordResetEmail(
+                        emailController.text.trim(),
                       );
-                    },
+                    }
+                  },
+                ),
+                SizedBox(height: 30.h),
 
-                    child: AnimatedOpacity(
-                      opacity: isSignedUp ? 1 : 0,
-                      duration: Duration(seconds: 1),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Already reset your password? ",
-                            style: t3White(),
-                          ),
-                          Text(
-                            "Login in ",
-                            style: t1heading().copyWith(fontSize: 18.sp),
-                          ),
-                        ],
-                      ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      AppRoutes.loginScreen,
+                    );
+                  },
+
+                  child: AnimatedOpacity(
+                    opacity: isSignedUp ? 1 : 0,
+                    duration: Duration(seconds: 1),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Already reset your password? ", style: t3White()),
+                        Text(
+                          "Login in ",
+                          style: t1heading().copyWith(fontSize: 18.sp),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

@@ -4,7 +4,6 @@ import 'package:family_management_app/app/routes/app_routes.dart';
 import 'package:family_management_app/app/textStyle/textstyles.dart';
 import 'package:family_management_app/app/utils/utils.dart';
 import 'package:family_management_app/bloc/role_update/role_update_cubit.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -113,172 +112,167 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
           },
           child: Center(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "What would you like to do next?",
-                      style: t1heading(),
-                      textAlign: TextAlign.center,
-                    ),
-                    BoardCard(
-                      title: "Create Board",
-                      subtitle:
-                          "Start a new board as Chief & manage members, roles, & activities.",
-                      imagePath: AppImages.createCardImage,
-                      onTap: () {
-                        setState(() {
-                          selectedIndex = 0;
-                        });
-                        showCustomBoardModalBottomSheet(
-                          context,
+              padding: EdgeInsets.symmetric(horizontal: 25),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "What would you like to do next?",
+                    style: t1heading().copyWith(height: 1.1),
+                    textAlign: TextAlign.center,
+                  ),
+                  BoardCard(
+                    title: "Create Board",
+                    subtitle:
+                        "Start a new board as Chief & manage members, roles, & activities.",
+                    imagePath: AppImages.createCardImage,
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = 0;
+                      });
+                      showCustomBoardModalBottomSheet(
+                        context,
 
-                          builder: (setModalState) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                MyUploadTextField(
-                                  userController: boardTitleController,
-                                  hint: "Alejandra Family Board",
-                                  labelText: "Board title",
-                                ),
-                                MyUploadTextField(
-                                  isDesc: true,
-                                  isRequired: false,
-                                  userController: boardDescriptionController,
-                                  hint:
-                                      "Organize family tasks, groceries, and events",
-                                  labelText: "Board Description",
-                                ),
-                                MyButtton(
-                                  text: "Create",
-                                  isLoading: isLoading,
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedIndex = 0;
-                                    });
-                                    setModalState(() {
-                                      isLoading;
-                                    });
-                                    if (boardTitleController.text
-                                        .trim()
-                                        .isEmpty) {
-                                      myAlertBox(
-                                        context,
-                                        subtittle: "Enter the title",
-                                        heading: "Creation Failed",
-                                      );
-                                    } else {
-                                      context
-                                          .read<RoleUpdateCubit>()
-                                          .updateChiefsRole(
-                                            title: boardTitleController.text
-                                                .trim(),
-                                            description:
-                                                boardDescriptionController.text
-                                                    .trim(),
-                                          );
-                                    }
-                                  },
-                                ),
-                                SizedBox(height: 50),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                    ),
+                        builder: (setModalState) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              MyUploadTextField(
+                                userController: boardTitleController,
+                                hint: "Alejandra Family Board",
+                                labelText: "Board title",
+                              ),
+                              MyUploadTextField(
+                                isDesc: true,
+                                isRequired: false,
+                                userController: boardDescriptionController,
+                                hint:
+                                    "Organize family tasks, groceries, and events",
+                                labelText: "Board Description",
+                              ),
+                              MyButtton(
+                                text: "Create",
+                                isLoading: isLoading,
+                                onPressed: () {
+                                  setState(() {
+                                    selectedIndex = 0;
+                                  });
+                                  setModalState(() {
+                                    isLoading;
+                                  });
+                                  if (boardTitleController.text
+                                      .trim()
+                                      .isEmpty) {
+                                    myAlertBox(
+                                      context,
+                                      subtittle: "Enter the title",
+                                      heading: "Creation Failed",
+                                    );
+                                  } else {
+                                    context
+                                        .read<RoleUpdateCubit>()
+                                        .updateChiefsRole(
+                                          title: boardTitleController.text
+                                              .trim(),
+                                          description:
+                                              boardDescriptionController.text
+                                                  .trim(),
+                                        );
+                                  }
+                                },
+                              ),
+                              SizedBox(height: 50),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
 
-                    BoardCard(
-                      title: "Join Board",
-                      subtitle:
-                          "Request to join an existing board using the Chief’s email or Board ID.",
-                      imagePath: AppImages.joinCardImage,
-                      onTap: () {
-                        setState(() {
-                          selectedIndex = 1;
-                        });
-                        showCustomBoardModalBottomSheet(
-                          context,
+                  BoardCard(
+                    title: "Join Board",
+                    subtitle:
+                        "Request to join an existing board using the Chief’s email or Board ID.",
+                    imagePath: AppImages.joinCardImage,
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = 1;
+                      });
+                      showCustomBoardModalBottomSheet(
+                        context,
 
-                          builder: (setModalState) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                MyUploadTextField(
-                                  onChangedValue: (value) {
-                                    if (value.isNotEmpty) {
-                                      onBoardIdEntered(value, setModalState);
-                                    }
-                                  },
-                                  userController: boarddIdController,
-                                  hint: "7245 or user@example.com",
-                                  labelText: "Board ID or Email address",
-                                  isCapital: false,
+                        builder: (setModalState) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              MyUploadTextField(
+                                onChangedValue: (value) {
+                                  if (value.isNotEmpty) {
+                                    onBoardIdEntered(value, setModalState);
+                                  }
+                                },
+                                userController: boarddIdController,
+                                hint: "7245 or user@example.com",
+                                labelText: "Board ID or Email address",
+                                isCapital: false,
 
-                                  backIcon: Icons.check,
-                                  backIconcolor: boardExistsint == 1
-                                      ? AppColor.secondary
-                                      : Colors.white30,
-                                ),
-                                MyUploadTextField(
-                                  userController: boardNickNameController,
-                                  hint: "Chiku",
-                                  labelText: "Your NickName",
-                                  isRequired: false,
-                                ),
-                                MyButtton(
-                                  text: "Join",
+                                backIcon: Icons.check,
+                                backIconcolor: boardExistsint == 1
+                                    ? AppColor.secondary
+                                    : Colors.white30,
+                              ),
+                              MyUploadTextField(
+                                userController: boardNickNameController,
+                                hint: "Chiku",
+                                labelText: "Your NickName",
+                                isRequired: false,
+                              ),
+                              MyButtton(
+                                text: "Join",
 
-                                  isLoading: isLoading,
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedIndex = 1;
-                                    });
-                                    setModalState(() {
-                                      isLoading;
-                                    });
-                                    if (boarddIdController.text
-                                        .trim()
-                                        .isEmpty) {
-                                      myAlertBox(
-                                        context,
-                                        subtittle:
-                                            "Enter the Board ID or Email Address",
-                                        heading: "Join Failed",
-                                      );
-                                    } else if (boardExistsint == 1) {
-                                      final input = boarddIdController.text
-                                          .trim();
-                                      context
-                                          .read<RoleUpdateCubit>()
-                                          .updateMembersRole(
-                                            input: input,
-                                            nickname: boardNickNameController
-                                                .text
-                                                .trim(),
-                                          );
-                                    } else {
-                                      myAlertBox(
-                                        context,
-                                        subtittle:
-                                            "Enter a vaild Email Address or BoardID",
-                                        heading: "Join Failed",
-                                      );
-                                    }
-                                  },
-                                ),
-                                SizedBox(height: 50),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                                isLoading: isLoading,
+                                onPressed: () {
+                                  setState(() {
+                                    selectedIndex = 1;
+                                  });
+                                  setModalState(() {
+                                    isLoading;
+                                  });
+                                  if (boarddIdController.text.trim().isEmpty) {
+                                    myAlertBox(
+                                      context,
+                                      subtittle:
+                                          "Enter the Board ID or Email Address",
+                                      heading: "Join Failed",
+                                    );
+                                  } else if (boardExistsint == 1) {
+                                    final input = boarddIdController.text
+                                        .trim();
+                                    context
+                                        .read<RoleUpdateCubit>()
+                                        .updateMembersRole(
+                                          input: input,
+                                          nickname: boardNickNameController.text
+                                              .trim(),
+                                        );
+                                  } else {
+                                    myAlertBox(
+                                      context,
+                                      subtittle:
+                                          "Enter a vaild Email Address or BoardID",
+                                      heading: "Join Failed",
+                                    );
+                                  }
+                                },
+                              ),
+                              SizedBox(height: 50),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
           ),

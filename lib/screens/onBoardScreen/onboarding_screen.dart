@@ -16,46 +16,41 @@ class Onboardingscreen extends StatefulWidget {
 class _OnboardingscreenState extends State<Onboardingscreen> {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
     return Scaffold(
       backgroundColor: AppColor.background,
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 60.h),
+        padding: const EdgeInsets.symmetric(horizontal: 25),
         child: Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 "You're the CEO of your life",
                 maxLines: 2,
-                style: t1heading(),
+                style: t1heading().copyWith(height: 1.1),
                 textAlign: TextAlign.center,
               ),
-
-              SizedBox(height: 10.h),
-              Flexible(
-                child: Text(
-                  "And this is your command center",
-                  style: t2White(),
-                  textAlign: TextAlign.center,
-                  softWrap: true,
-                ),
+              SizedBox(height: 15),
+              Text(
+                "And this is your command center",
+                style: hintTextStyle().copyWith(fontSize: 18.sp),
+                textAlign: TextAlign.center,
+                softWrap: true,
               ),
-              Spacer(),
-
-              SizedBox(
-                width: 300.w,
-                height: 400.h,
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: size.height * 0.4,
+                  maxWidth: size.width * 0.8,
+                ),
                 child: Image.asset(AppImages.logo),
               ),
-              Spacer(),
-              Padding(
-                padding: EdgeInsets.only(bottom: 50.h),
-                child: MyButtton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.onBoardingScreen1);
-                  },
-                  text: "Next",
-                ),
+              SizedBox(height: 20),
+              MyButtton(
+                onPressed: () {
+                  Navigator.pushNamed(context, AppRoutes.onBoardingScreen1);
+                },
+                text: "Next",
               ),
             ],
           ),

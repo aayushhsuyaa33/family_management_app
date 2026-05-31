@@ -219,7 +219,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Center(
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.w),
+                padding: EdgeInsets.symmetric(horizontal: 30),
                 child: Column(
                   children: [
                     SizedBox(height: 20.h),
@@ -228,7 +228,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       isUid
                           ? "Set up your Command Center account"
                           : "Create your command center accont",
-                      style: t3White(),
+                      style: hintTextStyle().copyWith(fontSize: 16.sp),
                     ),
                     SizedBox(height: 15.h),
                     imageHolderWithPlusAndNetwork(
