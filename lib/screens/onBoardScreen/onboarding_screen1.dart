@@ -30,7 +30,7 @@ class _OnboardingScreen1State extends State<OnboardingScreen1> {
                   "Run your home like a boardroom",
                   style: t1heading(),
                   textAlign: TextAlign.center,
-                  softWrap: true,
+                  // softWrap: true,
                 ),
               ),
               SizedBox(height: 10.h),
