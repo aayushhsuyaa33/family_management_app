@@ -23,7 +23,6 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> login({required String email, required String password}) async {
-    // final String? freshFcmToken = await FirebaseMessaging.instance.getToken();
     emit(
       state.copyWith(
         status: LoginStatus.logging,
@@ -100,11 +99,13 @@ class LoginCubit extends Cubit<LoginState> {
           errorMsg: "Logged in successfully",
         ),
       );
+      final fcmToken = await AppStorage.read(key: "fcmToken");
+      log("Login FCM Token: $fcmToken");
 
-      // await firestore.collection('users').doc(userUid).update({
-      //   "wasLogin": true,
-      //   "fcmToken": freshFcmToken,
-      // });
+      await firestore.collection('users').doc(userUid).update({
+        "wasLogin": true,
+        if (fcmToken != null) "fcmToken": fcmToken,
+      });
     } on FirebaseAuthException catch (exe) {
       final errorMessage = FirebaseAuthErrorHandler.getMessage(exe);
 
@@ -118,7 +119,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   Future<void> signInWithGoogle() async {
-    final String? freshFcmToken = await FirebaseMessaging.instance.getToken();
+    // final String? freshFcmToken = await FirebaseMessaging.instance.getToken();
     emit(
       state.copyWith(
         status: LoginStatus.googleLogin,
@@ -175,6 +176,9 @@ class LoginCubit extends Cubit<LoginState> {
       final userDocs = firestore.collection('users').doc(googleUsers.uid);
       final userDoc = await userDocs.get();
 
+      final fcmToken = await AppStorage.read(key: "fcmToken");
+      log("Login FCM Token: $fcmToken");
+
       if (userDoc.exists) {
         final savedGoogleRole = userDoc.data()?['role'] as String?;
         final savedGoogleBoardId = userDoc.data()?['boardId'] as String?;
@@ -185,7 +189,7 @@ class LoginCubit extends Cubit<LoginState> {
             AppStorage.save(key: "savedRole", data: savedGoogleRole),
             AppStorage.save(key: "uid", data: googleUsers.uid),
             AppStorage.save(key: "boardId", data: savedGoogleBoardId ?? ""),
-            userDocs.update({"wasLogin": true, "fcmToken": freshFcmToken}),
+            userDocs.update({"wasLogin": true, "fcmToken": fcmToken}),
           ]);
         }
 

@@ -234,12 +234,12 @@ class _ChatScreenState extends State<ChatScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(width: 12.w),
-                          // Expanded(
-                          //   child: VoiceTextField(
-                          //     controller: _controller,
-                          //     onChangedValue: (value) {},
-                          //   ),
-                          // ),
+                          Expanded(
+                            child: VoiceTextField(
+                              controller: _controller,
+                              onChangedValue: (value) {},
+                            ),
+                          ),
                           SizedBox(width: 12.w),
                           GestureDetector(
                             onTap: () {

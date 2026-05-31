@@ -1944,7 +1944,7 @@ class BoardCard extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.35,
+          height: MediaQuery.of(context).size.height * 0.36,
           decoration: BoxDecoration(
             color: AppColor.dropDownColor,
             borderRadius: BorderRadius.circular(15),
@@ -1959,7 +1959,7 @@ class BoardCard extends StatelessWidget {
             border: Border.all(color: AppColor.secondary, width: 1),
           ),
           child: Padding(
-            padding: EdgeInsets.all(12),
+            padding: EdgeInsets.all(15),
             child: Column(
               children: [
                 Text(
@@ -1967,9 +1967,13 @@ class BoardCard extends StatelessWidget {
                   style: t1heading().copyWith(color: AppColor.textSecondary),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 8.h),
-                Image.asset(imagePath, fit: BoxFit.cover, height: 150.h),
-                SizedBox(height: 4.h),
+                SizedBox(height: 8),
+                Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  height: MediaQuery.of(context).size.height * 0.19,
+                ),
+                SizedBox(height: 8),
                 Row(
                   children: [
                     Flexible(

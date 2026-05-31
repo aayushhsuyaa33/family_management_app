@@ -52,28 +52,28 @@ class _SplashScreenState extends State<SplashScreen>
 
     await Future.delayed(Duration(seconds: 2));
     Navigator.pushNamed(context, AppRoutes.onBoardingScreen);
-    // if (isFirstInstall) {
-    //   Navigator.pushNamedAndRemoveUntil(
-    //     context,
-    //     AppRoutes.splashScreen1,
-    //     (route) => false,
-    //   );
-    //   return;
-    // } else if (savedUid != null) {
-    //   Navigator.pushNamedAndRemoveUntil(
-    //     context,
-    //     AppRoutes.navigationScreen,
-    //     (route) => false,
-    //   );
-    //   return;
-    // } else {
-    //   Navigator.pushNamedAndRemoveUntil(
-    //     context,
-    //     AppRoutes.loginScreen,
-    //     (route) => false,
-    //   );
-    //   return;
-    // }
+    if (isFirstInstall) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.splashScreen1,
+        (route) => false,
+      );
+      return;
+    } else if (savedUid != null) {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.navigationScreen,
+        (route) => false,
+      );
+      return;
+    } else {
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRoutes.loginScreen,
+        (route) => false,
+      );
+      return;
+    }
   }
 
   // Aaded comenet

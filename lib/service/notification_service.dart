@@ -49,12 +49,6 @@ class NotificationService {
       await AppStorage.save(key: "fcmToken", data: fcmtoken);
       log("FCM Token: $fcmtoken");
     }
-    // ✅ Get FCM Token
-    // String? fcmtoken = await _messaging.getToken();
-    // if (fcmtoken != null) {
-    //   await AppStorage.save(key: "fcmToken", data: fcmtoken);
-    //   log("FCM Token: $fcmtoken");
-    // }
 
     // ✅ Foreground listener
     FirebaseMessaging.onMessage.listen((RemoteMessage msg) {

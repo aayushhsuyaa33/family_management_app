@@ -143,7 +143,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       "Sign in to your command center",
                       style: hintTextStyle().copyWith(fontSize: 16.sp),
                     ),
-
                     SizedBox(height: 30),
                     MyTextField(
                       userController: userEmailController,

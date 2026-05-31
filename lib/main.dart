@@ -1,3 +1,4 @@
+import 'package:family_management_app/app/app%20Color/app_color.dart';
 import 'package:family_management_app/app/routes/app_router.dart';
 import 'package:family_management_app/app/routes/app_routes.dart';
 import 'package:family_management_app/service/multi_bloc_widget.dart';
@@ -34,7 +35,11 @@ class MyApp extends StatelessWidget {
       ensureScreenSize: true,
       builder: (context, child) {
         return MaterialApp(
-          theme: ThemeData.dark(),
+          theme: ThemeData(
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor: AppColor.background,
+          ),
+          themeMode: ThemeMode.dark,
           debugShowCheckedModeBanner: false,
           onGenerateRoute: AppRouter().generateRoutes,
           initialRoute: AppRoutes.splashScreen,

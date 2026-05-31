@@ -239,27 +239,30 @@ class _CalenderScreenState extends State<CalenderScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      savedRole == "Chief"
-                          ? SizedBox(height: 40.h, child: myDropDownButton())
-                          : SizedBox(),
-                      Row(
-                        children: List.generate(3, (index) {
-                          return filterContainer(
-                            text: filters[index],
-                            onPressed: () {
-                              setState(() {});
-                              selectedIndex = index;
-                            },
-                            textColor: selectedIndex == index
-                                ? AppColor.secondary
-                                : Colors.white,
-                          );
-                        }),
-                      ),
-                    ],
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        savedRole == "Chief"
+                            ? SizedBox(height: 40.h, child: myDropDownButton())
+                            : SizedBox(),
+                        Row(
+                          children: List.generate(3, (index) {
+                            return filterContainer(
+                              text: filters[index],
+                              onPressed: () {
+                                setState(() {});
+                                selectedIndex = index;
+                              },
+                              textColor: selectedIndex == index
+                                  ? AppColor.secondary
+                                  : Colors.white,
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 20.h),
                   GestureDetector(
